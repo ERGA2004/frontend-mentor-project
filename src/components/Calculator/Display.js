@@ -9,7 +9,8 @@ const Display = (props) => {
 
   return (
     <Fragment>
-      {/* //* The display rendered alternates between what it shows, the text--result shows the activeNumber when there is no resultNumber */}
+      {/* //* /* //* Отображаемый дисплей чередуется с тем,
+       что он показывает, тест-результат показывает активный номер, когда нет resultNumber */}
       <div className={classes.display}>
         <span className={classes["text--calculation"]}>
           {props.savedNumber} {props.operatorSymbol}{" "}
@@ -19,13 +20,13 @@ const Display = (props) => {
           {props.resultNumber ? "=" : null} &#8205;
         </span>
         <span className={classes["text--result"]}>
-          {/* this is to force a fake comma to be displayed temporarely */}
+          {/* /* это делается для того, чтобы временно отобразить поддельную запятую */}
           {props.activeNumber.charAt(props.activeNumber.length - 1) === "."
             ? "."
             : null}
           {props.resultNumber || props.resultNumber === 0
             ? removeTrailingZeros()
-            : props.activeNumber.charAt(props.activeNumber.length - 1) === "." //<-- removes the "real" comma temporarely
+            : props.activeNumber.charAt(props.activeNumber.length - 1) === "." //<-- //<-- временно удаляет "настоящую" запятую
             ? props.activeNumber.substring(0, props.activeNumber.length - 1)
             : props.activeNumber}
         </span>
