@@ -9,8 +9,8 @@ function App() {
   const [savedNumber, setSavedNumber] = useState("");
   const [resultNumber, setResultNumber] = useState("");
   const [operatorSymbol, setOperatorSymbol] = useState("");
-  const [delIsRecieved, setdelIsRecieved] = useState(false); //Protects from removing a number from active number if result number is present
-  const [readyForNumber, setReadyForNumber] = useState(false); //When true, the result number will become savednumber on a recieved number type
+  const [delIsRecieved, setdelIsRecieved] = useState(false); //Защищает от удаления номера из активного номера, если присутствует результирующий номер
+  const [readyForNumber, setReadyForNumber] = useState(false); ////При значении true результирующий номер станет сохраненным номером для типа полученного номера
   const [theme, setTheme] = useState(
     localStorage.getItem("theme")
       ? localStorage.getItem("theme")
@@ -19,7 +19,7 @@ function App() {
       : "light"
   );
 
-  // will check if mql matches the device theme and change it accordingly
+// проверит, соответствует ли mql теме устройства, и изменит ее соответствующим образом
   const mql = window.matchMedia("(prefers-color-scheme: dark)");
   function changeThemeToDevice(e) {
     if (e.matches) {
@@ -37,7 +37,7 @@ function App() {
     };
   }, [mql]);
 
-  //-----------
+
 
   const changeTheme = (themeString) => {
     setTheme(themeString);
@@ -48,9 +48,9 @@ function App() {
     calculate(recievedSymbol);
   };
 
-  //* The calculate function does different things depending on the recievedsymbols type or name.
+//* //* Функция вычисления выполняет разные действия в зависимости от типа или имени полученных символов.
   const calculate = (recievedSymbol) => {
-    //if savedNumber === infinity, reset calculator
+////if saved number === бесконечность, сбросьте калькулятор
     if (!isFinite(savedNumber)) {
       setResultNumber("");
       setActiveNumber("");
@@ -58,7 +58,7 @@ function App() {
       setOperatorSymbol("");
       return;
     }
-    //*Add number to activeNumber
+//*//*Добавить номер к активному номеру
     if (recievedSymbol.type === "number") {
       if (resultNumber) {
         setResultNumber("");
@@ -66,14 +66,14 @@ function App() {
       }
       setActiveNumber((prevState) => {
         let newNumber = prevState + recievedSymbol.name;
-        //only allow one 0 before a decimal
+//допускается только один 0 перед десятичной дробью
         if (newNumber.charAt(0) === "0" && !activeNumber.includes(".")) {
           newNumber = newNumber.substring(1);
         }
         return newNumber;
       });
     }
-    //Only allow one "." symbol
+//Разрешен только один символ "."
     if (recievedSymbol.name === ".") {
       if (!activeNumber.includes(".")) {
         setActiveNumber((prevState) => {
@@ -82,7 +82,7 @@ function App() {
         });
       }
     }
-    //Set result to savedNumber if there is a result and number is recieved
+ ////Установка результата на сохраненный номер, если есть результат и номер получен
     if (readyForNumber && recievedSymbol.type === "number" && !delIsRecieved) {
       if (recievedSymbol.name === "0") {
         setActiveNumber("0");
@@ -90,13 +90,13 @@ function App() {
       setReadyForNumber(false);
       setSavedNumber(resultNumber);
     }
-    //Add operator, set activeNumber to savedNumber
+//Добавление оператора, установить activeNumber в savedNumber
     if (recievedSymbol.type === "operator" && !operatorSymbol) {
       setOperatorSymbol(recievedSymbol.name);
       setActiveNumber("0");
       setSavedNumber(activeNumber);
     }
-    //Switch the operator if an operator is already set
+//Переключение оператора, если оператор уже установлен
     if (recievedSymbol.type === "operator" && resultNumber) {
       setReadyForNumber(false);
       setOperatorSymbol(recievedSymbol.name);
@@ -106,7 +106,7 @@ function App() {
       }
       setResultNumber("");
     }
-    //Calculate the numbers and make ready for new input
+    //Вычислите числа и подготовка к новому вводу
     if (recievedSymbol.type === "operator" && !resultNumber && operatorSymbol) {
       setReadyForNumber(false);
       setOperatorSymbol(recievedSymbol.name);
@@ -126,10 +126,10 @@ function App() {
         setActiveNumber("0");
       }
     }
-    //*Remove a symbol from activeNumber
+//*//*Удалить символ из активного номера
     if (recievedSymbol.name === "DEL") {
       if (delIsRecieved) {
-        //simply removes the last digit
+       //просто удаляет последнюю цифру
         setActiveNumber(Math.floor(activeNumber / 10).toString());
       }
       if (!delIsRecieved) {
@@ -144,7 +144,7 @@ function App() {
       setSavedNumber("");
       setResultNumber("");
     }
-    //Allows the user to repeatedly smash the = button and get the result from the last resultNumber and current activeNumber
+    //// Позволяет пользователю повторно нажимать кнопку = и получать результат из последнего номера результата и текущего активного номера
     if (resultNumber && recievedSymbol.name === "=") {
       setdelIsRecieved(false);
       setSavedNumber(resultNumber);
@@ -161,7 +161,7 @@ function App() {
         setResultNumber(+resultNumber / +activeNumber);
       }
     }
-    //This allows for smashing the button to go below 0 if the result is 0
+//Это позволяет разбить кнопку, чтобы она опустилась ниже 0, если результат равен 0
     if (resultNumber === 0 && recievedSymbol.name === "=") {
       setdelIsRecieved(false);
       setSavedNumber(resultNumber);
@@ -178,7 +178,7 @@ function App() {
         setResultNumber(+resultNumber / +activeNumber);
       }
     }
-    //Do the calculation if there is no resultNumber
+////Выполните вычисление, если нет результирующего номера
     if (recievedSymbol.name === "=" && !resultNumber) {
       setReadyForNumber(true);
       setdelIsRecieved(false);
